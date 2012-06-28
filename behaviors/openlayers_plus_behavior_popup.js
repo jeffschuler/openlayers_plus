@@ -109,22 +109,28 @@ Drupal.openlayers_plus_behavior_popup = {
   },
 
   // Click state
-  'openPopup': function(feature) {
+  'openPopup': function(feature, control) {
+    // If openPopup is called "normally" via the click callback, 'this' is the
+    // SelectFeature control. Otherwise, control needs to be passed in.
+    if (this.displayClass == "olControlSelectFeature") {
+      control = this;
+    }
+
     // OL clickFeature() re-implementation: */
-    if(!this.hover) {
+    if(!control.hover) {
       var selected = (OpenLayers.Util.indexOf(
         feature.layer.selectedFeatures, feature) > -1);
       if(selected) {
-        if(this.toggleSelect()) {
-          this.unselect(feature);
-        } else if(!this.multipleSelect()) {
-          this.unselectAll({except: feature});
+        if(control.toggleSelect()) {
+          control.unselect(feature);
+        } else if(!control.multipleSelect()) {
+          control.unselectAll({except: feature});
         }
       } else {
-        if(!this.multipleSelect()) {
-          this.unselectAll({except: feature});
+        if(!control.multipleSelect()) {
+          control.unselectAll({except: feature});
         }
-        this.select(feature);
+        control.select(feature);
       }
     }
 
