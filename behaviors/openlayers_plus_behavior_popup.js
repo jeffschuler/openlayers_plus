@@ -110,6 +110,24 @@ Drupal.openlayers_plus_behavior_popup = {
 
   // Click state
   'openPopup': function(feature) {
+    // OL clickFeature() re-implementation: */
+    if(!this.hover) {
+      var selected = (OpenLayers.Util.indexOf(
+        feature.layer.selectedFeatures, feature) > -1);
+      if(selected) {
+        if(this.toggleSelect()) {
+          this.unselect(feature);
+        } else if(!this.multipleSelect()) {
+          this.unselectAll({except: feature});
+        }
+      } else {
+        if(!this.multipleSelect()) {
+          this.unselectAll({except: feature});
+        }
+        this.select(feature);
+      }
+    }
+
     var context = $(feature.layer.map.div);
 
     // Initialize popup
